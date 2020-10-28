@@ -1,5 +1,5 @@
-import { logger } from '../lib/logger'
-import { env } from '../lib/env'
+import { logger } from '../lib/logger.js'
+import { env } from '../lib/env.js'
 
 /**
  * Error handler middleware.

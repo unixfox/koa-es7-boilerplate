@@ -1,5 +1,5 @@
 import yenv from 'yenv'
-import { logger } from './logger'
+import { logger } from './logger.js'
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 

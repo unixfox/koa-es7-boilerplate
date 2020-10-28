@@ -9,7 +9,7 @@
     "npm": ">=3.8"
   },
   "scripts": {
-    "start": "node dist/bin/www.js",
+    "start": "node src/bin/www.js",
     "build": "rimraf dist && cross-env NODE_ENV=production babel src -d dist -s",
     "dev": "nodemon src/bin/www.js",
     "test": "cross-env NODE_ENV=test jest",
@@ -17,6 +17,7 @@
     "lint": "eslint --fix src && prettier --write \"src/**/*.js\"",
     "precommit": "lint-staged"
   },
+  "type": "module",
   "dependencies": {
     "@koa/cors": "^2.2.2",
     "awilix": "^4.0.1",

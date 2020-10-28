@@ -1,6 +1,6 @@
 import { Bristol } from 'bristol'
 import palin from 'palin'
-import { env } from './env'
+import { env } from './env.js'
 
 export const logger = new Bristol()
 

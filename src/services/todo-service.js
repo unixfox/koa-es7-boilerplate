@@ -1,5 +1,6 @@
 import { NotFound, BadRequest } from 'fejl'
-import { pick } from 'lodash'
+import pkg from 'lodash'
+const { pick } = pkg
 
 // Prefab assert function.
 const assertId = BadRequest.makeAssert('No id given')

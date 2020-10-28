@@ -1,5 +1,7 @@
 import { createContainer, Lifetime, InjectionMode, asValue } from 'awilix'
-import { logger } from './logger'
+import { logger } from './logger.js'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
 
 /**
  * Using Awilix, the following files and folders (glob patterns)
@@ -24,8 +26,14 @@ export function configureContainer() {
   const opts = {
     // Classic means Awilix will look at function parameter
     // names rather than passing a Proxy.
-    injectionMode: InjectionMode.CLASSIC
+    injectionMode: InjectionMode.CLASSIC,
+    require: async function(uri) {
+      const require = await import(uri)
+      return require
+    }
   }
+  const __filename = fileURLToPath(import.meta.url)
+  const __dirname = dirname(__filename)
   return createContainer(opts)
     .loadModules(modulesToLoad, {
       // `modulesToLoad` paths should be relative

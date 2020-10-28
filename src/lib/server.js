@@ -4,13 +4,15 @@ import cors from '@koa/cors'
 import respond from 'koa-respond'
 import bodyParser from 'koa-bodyparser'
 import compress from 'koa-compress'
-import { scopePerRequest, loadControllers } from 'awilix-koa'
+import { scopePerRequest, controller } from 'awilix-koa'
 
-import { logger } from './logger'
-import { configureContainer } from './container'
-import { notFoundHandler } from '../middleware/not-found'
-import { errorHandler } from '../middleware/error-handler'
-import { registerContext } from '../middleware/register-context'
+import { logger } from './logger.js'
+import { configureContainer } from './container.js'
+import { notFoundHandler } from '../middleware/not-found.js'
+import { errorHandler } from '../middleware/error-handler.js'
+import { registerContext } from '../middleware/register-context.js'
+
+import todos from '../routes/todos-api.js'
 
 /**
  * Creates and returns a new Koa application.
@@ -41,7 +43,7 @@ export async function createServer() {
     // Create a middleware to add request-specific data to the scope.
     .use(registerContext)
     // Load routes (API "controllers")
-    .use(loadControllers('../routes/*.js', { cwd: __dirname }))
+    .use(controller(todos))
     // Default handler when nothing stopped the chain.
     .use(notFoundHandler)
 
