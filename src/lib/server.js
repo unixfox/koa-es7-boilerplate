@@ -12,7 +12,12 @@ import { notFoundHandler } from '../middleware/not-found.js'
 import { errorHandler } from '../middleware/error-handler.js'
 import { registerContext } from '../middleware/register-context.js'
 
-import todos from '../routes/todos-api.js'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
+import { promises as fs } from 'fs'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 /**
  * Creates and returns a new Koa application.
@@ -25,7 +30,8 @@ export async function createServer() {
   const app = new Koa()
 
   // Container is configured with our services and whatnot.
-  const container = (app.container = configureContainer())
+  const container = (app.container = await configureContainer())
+
   app
     // Top middleware is the error handler.
     .use(errorHandler)
@@ -42,10 +48,19 @@ export async function createServer() {
     .use(scopePerRequest(container))
     // Create a middleware to add request-specific data to the scope.
     .use(registerContext)
-    // Load routes (API "controllers")
-    .use(controller(todos))
-    // Default handler when nothing stopped the chain.
-    .use(notFoundHandler)
+
+  const modulesPath = `${__dirname}/../routes/`
+  const files = await fs.readdir(modulesPath)
+  for await (const filename of files) {
+    if (filename.endsWith('.js')) {
+      console.log(modulesPath + filename)
+      const module = await import(modulesPath + filename)
+      await app.use(controller(module.default))
+    }
+  }
+
+  // Default handler when nothing stopped the chain.
+  app.use(notFoundHandler)
 
   // Creates a http server ready to listen.
   const server = http.createServer(app.callback())

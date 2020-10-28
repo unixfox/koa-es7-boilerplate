@@ -13,19 +13,19 @@ const pickProps = data => pick(data, ['title', 'completed'])
  * Gets a todo store injected.
  */
 export default class TodoService {
-  constructor(todoStore) {
-    this.todoStore = todoStore
+  constructor(createTodoStore) {
+    this.createTodoStore = createTodoStore
   }
 
   async find(params) {
-    return this.todoStore.find(params)
+    return this.createTodoStore.find(params)
   }
 
   async get(id) {
     assertId(id)
-    // If `todoStore.get()` returns a falsy value, we throw a
+    // If `createTodoStore.get()` returns a falsy value, we throw a
     // NotFound error with the specified message.
-    return this.todoStore
+    return this.createTodoStore
       .get(id)
       .then(NotFound.makeAssert(`Todo with id "${id}" not found`))
   }
@@ -34,7 +34,7 @@ export default class TodoService {
     BadRequest.assert(data, 'No todo payload given')
     BadRequest.assert(data.title, 'title is required')
     BadRequest.assert(data.title.length < 100, 'title is too long')
-    return this.todoStore.create(pickProps(data))
+    return this.createTodoStore.create(pickProps(data))
   }
 
   async update(id, data) {
@@ -46,12 +46,12 @@ export default class TodoService {
 
     // Prevent overposting.
     const picked = pickProps(data)
-    return this.todoStore.update(id, picked)
+    return this.createTodoStore.update(id, picked)
   }
 
   async remove(id) {
     // Make sure the todo exists by calling `get`.
     await this.get(id)
-    return this.todoStore.remove(id)
+    return this.createTodoStore.remove(id)
   }
 }

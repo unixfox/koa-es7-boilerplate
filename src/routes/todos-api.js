@@ -4,15 +4,15 @@ import { createController } from 'awilix-koa'
 // All it does is map HTTP calls to service calls.
 // This way our services could be used in any type of app, not
 // just over HTTP.
-const api = todoService => ({
-  findTodos: async ctx => ctx.ok(await todoService.find(ctx.query)),
-  getTodo: async ctx => ctx.ok(await todoService.get(ctx.params.id)),
+const api = TodoService => ({
+  findTodos: async ctx => ctx.ok(await TodoService.find(ctx.query)),
+  getTodo: async ctx => ctx.ok(await TodoService.get(ctx.params.id)),
   createTodo: async ctx =>
-    ctx.created(await todoService.create(ctx.request.body)),
+    ctx.created(await TodoService.create(ctx.request.body)),
   updateTodo: async ctx =>
-    ctx.ok(await todoService.update(ctx.params.id, ctx.request.body)),
+    ctx.ok(await TodoService.update(ctx.params.id, ctx.request.body)),
   removeTodo: async ctx =>
-    ctx.noContent(await todoService.remove(ctx.params.id))
+    ctx.noContent(await TodoService.remove(ctx.params.id))
 })
 
 // Maps routes to method calls on the `api` controller.
